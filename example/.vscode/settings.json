@@ -1,0 +1,45 @@
+{
+    "files.associations": {
+        "*.Rtex": "latex",
+    },
+    "files.exclude": {
+        "**/*.aux": true,
+        "**/*.bbl": true,
+        "**/*.blg": true,
+        "**/*.brf": true,
+        "**/*.idx": true,
+        "**/*.log": true,
+        "**/*.tex": true,
+        "**/*.lof": true,
+        "**/*.lot": true,
+        "**/*.toc": true,
+        "**/*.glg": true,
+        "**/*.glo": true,
+        "**/*.gls": true,
+        "**/*.ilg": true,
+        "**/*.ind": true,
+        "**/*.ist": true,
+        "**/cache/": true,
+        "**/.gitkeep": true,
+
+        "**/package-lock.json": true,
+        "**/package.json": true,
+        "**/.env": true,
+
+        "**/index.js": true,
+        "**/.gitignore": true,
+        "**/Makefile": true,
+    },
+    "[latex]": {
+        "editor.wordWrap": "on",
+        "editor.autoClosingQuotes": "always",
+        "editor.autoClosingBrackets": "always",
+        "editor.lineNumbers": "interval",
+    },
+    "workbench.editor.autoLockGroups": {
+        "pdf.preview": true
+    },
+    "workbench.statusBar.visible": true,
+    "workbench.activityBar.location": "hidden",
+    "r.lsp.promptToInstall": false
+}
