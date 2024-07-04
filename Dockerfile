@@ -64,6 +64,7 @@ COPY custom-abntex2.cls $HOME/mystyles/
 ENV TEXINPUTS=".:$HOME/mystyles//:"
 
 WORKDIR /data
-COPY Makefile .
+COPY build.sh .
+COPY cleanup.sh .
 
 VOLUME ["/data/project"]

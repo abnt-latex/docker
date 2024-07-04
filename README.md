@@ -45,12 +45,12 @@ export MANPATH="/usr/local/texlive/<the-version-texlive>/texmf-dist/doc/man:$MAN
 ### Compile
 
 ```bash
-make target folder={ FOLDER } mode={ abntex | bib | simple } # in root
+./build.sh --folder=${ FOLDER } --mode=${ abntex | bib | simple } --simplify # in root
 # OR to execute abntex mode
-pdflatex -interaction=nonstopmode { MAIN_FILE }
-bibtex { MAIN_FILE }
-makeindex { MAIN_FILE }.idx
-makeglossaries { MAIN_FILE }
-pdflatex -interaction=nonstopmode { MAIN_FILE }
-pdflatex -interaction=nonstopmode { MAIN_FILE }
+pdflatex --interaction=batchmode ${ MAIN_FILE }
+bibtex ${ MAIN_FILE }
+makeindex ${ MAIN_FILE }.idx
+makeglossaries ${ MAIN_FILE }
+pdflatex --interaction=batchmode ${ MAIN_FILE }
+pdflatex --interaction=nonstopmode  ${ MAIN_FILE } | grep ...
 ```

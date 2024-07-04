@@ -1,7 +1,4 @@
 {
-    "files.associations": {
-        "*.Rtex": "latex",
-    },
     "files.exclude": {
         "**/*.aux": true,
         "**/*.bbl": true,
