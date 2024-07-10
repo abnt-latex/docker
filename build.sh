@@ -122,17 +122,17 @@ exec_R
 
 case ${MODE} in
     abntex)
-        exec_pdflatex --interaction=batchmode
+        exec_pdflatex --interaction=batchmode --draftmode
 	    exec_bibtex
 	    exec_makeindex
 	    exec_makeglossaries
-        exec_pdflatex --interaction=batchmode
+        exec_pdflatex --interaction=batchmode --draftmode
         exec_pdflatex --interaction=nonstopmode | simplify_output
         ;;
     bib)
-        exec_pdflatex
+        exec_pdflatex --interaction=batchmode --draftmode
         exec_bibtex
-        exec_pdflatex
+        exec_pdflatex --interaction=batchmode --draftmode
         exec_pdflatex --interaction=nonstopmode | simplify_output
         ;;
     simple)

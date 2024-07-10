@@ -31,13 +31,13 @@ RUN perl /install-tl-unx/install-tl --profile=/install-tl-unx/texlive.profile
 # RUN apt-get install --yes libfontconfig1
 
 # Custom fonts
-# RUN apt-get install --yes fontconfig
-# COPY fonts /usr/local/share/fonts/my_fonts
-# RUN fc-cache
+RUN apt-get install --yes fontconfig
+COPY fonts /usr/local/share/fonts/my_fonts
+RUN fc-cache
 
 ENV PATH="/usr/local/texlive/2024/bin/x86_64-linux:${PATH}"
-ENV INFOPATH="/usr/local/texlive/2024/texmf-dist/doc/info:$INFOPATH"
-ENV MANPATH="/usr/local/texlive/2024/texmf-dist/doc/man:$MANPATH"
+#ENV INFOPATH="/usr/local/texlive/2024/texmf-dist/doc/info:${INFOPATH}"
+#ENV MANPATH="/usr/local/texlive/2024/texmf-dist/doc/man:${MANPATH}"
 
 # Install more Latex Packages
 RUN tlmgr install abntex2
@@ -60,7 +60,8 @@ WORKDIR .
 RUN apt-get --yes autoremove && apt-get --yes clean
 RUN rm -rf /var/lib/apt/lists/*
 
-COPY custom-abntex2.cls $HOME/mystyles/
+ENV HOME=/home/ubuntu
+COPY inputs $HOME/mystyles
 ENV TEXINPUTS=".:$HOME/mystyles//:"
 
 WORKDIR /data
