@@ -64,6 +64,9 @@ ENV HOME=/home/ubuntu
 COPY inputs $HOME/mystyles
 ENV TEXINPUTS=".:$HOME/mystyles//:"
 
+COPY texmf $HOME/texmf
+RUN texhash $HOME/texmf
+
 WORKDIR /data
 COPY build.sh .
 COPY cleanup.sh .
