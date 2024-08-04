@@ -45,8 +45,8 @@ export MANPATH="/usr/local/texlive/<the-version-texlive>/texmf-dist/doc/man:$MAN
 ### Compile
 
 ```bash
-./build.sh --folder=${ FOLDER } --mode=${ abntex | bib | simple } --simplify # in root
-# OR to execute abntex mode
+./build.sh --dir=${ FOLDER } --file=${ FILE } --mode=${ complete | bib | simple } --simplify # in root
+# OR to execute complete mode
 pdflatex --interaction=batchmode ${ MAIN_FILE }
 bibtex ${ MAIN_FILE }
 makeindex ${ MAIN_FILE }.idx

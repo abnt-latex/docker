@@ -3,7 +3,7 @@
 OPTSTRING=":m:f:s-:"
 
 MODE="simple"
-PROJECT_DIR="project/"
+PROJECT_DIR=""
 FILE="main"
 SIMPLIFY=false
 
@@ -19,8 +19,11 @@ while getopts ${OPTSTRING} OPT; do
         m | mode)
             MODE="${OPTARG}"
             ;;
-        f | folder)
-            PROJECT_DIR="projects/${OPTARG}/"
+        d | dir)
+            PROJECT_DIR="${OPTARG}/"
+            ;;
+        f | file)
+            FILE="${OPTARG}"
             ;;
         s | simplify)
             SIMPLIFY=true
@@ -121,7 +124,7 @@ done
 exec_R
 
 case ${MODE} in
-    abntex)
+    complete)
         exec_pdflatex --interaction=batchmode --draftmode
 	    exec_bibtex
 	    exec_makeindex

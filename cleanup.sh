@@ -2,7 +2,7 @@
 
 OPTSTRING=":f:-:"
 
-PROJECT_DIR="project/"
+PROJECT_DIR=""
 FILE="main"
 
 while getopts ${OPTSTRING} OPT; do
@@ -14,8 +14,11 @@ while getopts ${OPTSTRING} OPT; do
     fi
 
     case ${OPT} in
-        f | folder)
-            PROJECT_DIR="projects/${OPTARG}/"
+         d | dir)
+            PROJECT_DIR="${OPTARG}/"
+            ;;
+        f | file)
+            FILE="${OPTARG}"
             ;;
         :)
             echo "Option -${OPTARG} requires an argument."
