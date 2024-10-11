@@ -4,6 +4,15 @@
 # Ubuntu 24.04 LTS
 FROM ubuntu:24.04 AS build-env
 
+LABEL \
+  org.opencontainers.image.title="Docker Image of TeXLive" \
+  org.opencontainers.image.authors="abnt-latex" \
+  org.opencontainers.image.source="https://github.com/abnt-latex/docker"
+
+COPY \ 
+    README.md \
+    /
+
 # Initialize
 RUN apt-get update --quiet
 
