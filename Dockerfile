@@ -52,6 +52,7 @@ ENV PATH="/usr/local/texlive/2024/bin/x86_64-linux:${PATH}"
 RUN tlmgr install abntex2
 RUN tlmgr install multibib
 RUN tlmgr install steinmetz 
+RUN tlmgr install newtx
 
 RUN rm -r /install-tl-unx
 RUN rm install-tl-unx.tar.gz
