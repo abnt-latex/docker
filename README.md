@@ -1,5 +1,17 @@
 # Initialize with Docker
 
+[![GitHub Actions Status](https://github.com/abnt-latex/docker/workflows/Build%20Docker%20Image/badge.svg)](https://github.com/abnt-latex/docker/actions)
+
+## Para usar as imagens (`Packages`)
+
+* [TeXLive and R](https://github.com/orgs/abnt-latex/packages/container/package/texlive-r)
+
+```bash
+docker docker pull ghcr.io/abnt-latex/texlive-r:latest
+```
+
+## Para fazer de forma manual
+
 ### Image
 
 Para criar a imagem do latex:ubuntu [40:00.0s]:
@@ -53,4 +65,7 @@ makeindex ${ MAIN_FILE }.idx
 makeglossaries ${ MAIN_FILE }
 pdflatex --interaction=batchmode ${ MAIN_FILE }
 pdflatex --interaction=nonstopmode  ${ MAIN_FILE } | grep ...
+# OR
+# https://ctan.org/pkg/latexmk
+latexmk -pdf ${ MAIN_FILE }
 ```
