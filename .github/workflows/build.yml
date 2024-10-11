@@ -13,8 +13,8 @@ jobs:
       VERSION: 1.0.1
     steps:
       - name: Informações
-        run: \
-          echo "actor ${{ github.actor }}" \
+        run: |
+          echo "actor ${{ github.actor }}" /
           echo "${{ env.TAG }}:${{ env.VERSION }}"
       - name: Configurar o código do repositório
         uses: actions/checkout@v4
