@@ -1,86 +1,118 @@
 # syntax=docker/dockerfile:1
 
+ARG TEXLIVE_VERSION="2024"
+ARG TEXLIVE_PLATFORM="x86_64-linux"
+
+ARG TEXMF_FOLDER="/usr/share/texmf"
+
 ## Preamble
-# Ubuntu 24.04 LTS
-FROM ubuntu:24.04 AS build-env
+# https://hub.docker.com/_/debian
+FROM debian:bookworm-slim AS base-env
+
+ARG TEXLIVE_VERSION
 
 LABEL \
   org.opencontainers.image.title="Docker Image of TeXLive" \
   org.opencontainers.image.authors="abnt-latex" \
   org.opencontainers.image.source="https://github.com/abnt-latex/docker"
 
-COPY \ 
-    README.md \
-    /
-
-# Initialize
-RUN apt-get update --quiet
-
-RUN apt-get install -y -qq --no-install-recommends \
+RUN apt-get update -y -qq && apt-get install -y -qq --no-install-recommends \
     ca-certificates \
-    build-essential \
+    # recommend by debian docker
+    locales \
+    # use custom font
+    fontconfig \
+    # Required for XeLaTeX to work
+    # libfontconfig1 \
+    # install R
+    r-base r-base-dev && \
+    #
+    localedef -i pt_BR -c -f UTF-8 -A /usr/share/locale/locale.alias pt_BR.UTF-8 && \
+    update-ca-certificates && \
+    apt-get -y autoclean && apt-get -y autoremove && apt-get -y clean && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN rm -rf /usr/local/texlive/${TEXLIVE_VERSION} \
+    rm -rf ~/.texlive${TEXLIVE_VERSION}
+
+ENV LANG=pt_BR.utf8
+
+## Build TexLive
+# https://www.tug.org/texlive/
+FROM base-env AS build-env
+
+RUN apt-get update -y -qq && apt-get install -y -qq --no-install-recommends \
     wget \
-    libwww-perl \
-    inkscape
+    # requeriments for install texlive
+    build-essential \
+    libwww-perl && \
+    #
+    apt-get -y autoclean && apt-get -y autoremove && apt-get -y clean && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN apt-get install -y -qq --no-install-recommends locales && locale-gen pt_BR.UTF-8
-
-## TexLive
-# Download TexLive
-WORKDIR /texlive
+WORKDIR /tmp/texlive
 RUN wget https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
-RUN mkdir /install-tl-unx
-RUN tar -xvf install-tl-unx.tar.gz -C /install-tl-unx --strip-components=1
+RUN mkdir -p install-tl-unx
+RUN tar -xvf install-tl-unx.tar.gz -C install-tl-unx --strip-components=1
 
 # Install TexLive with Profile
-COPY texlive.profile /install-tl-unx/texlive.profile
-RUN perl /install-tl-unx/install-tl --profile=/install-tl-unx/texlive.profile
+COPY texlive.profile install-tl-unx/texlive.profile
 
-# Required for XeLaTeX to work
-# RUN apt-get install --yes libfontconfig1
+RUN cd install-tl-unx && \
+    perl install-tl --profile=texlive.profile
 
-# Custom fonts
-RUN apt-get install --yes fontconfig
-COPY fonts /usr/local/share/fonts/my_fonts
-RUN fc-cache
+# Post-install
+RUN rm -rf /tmp
 
-ENV PATH="/usr/local/texlive/2024/bin/x86_64-linux:${PATH}"
-#ENV INFOPATH="/usr/local/texlive/2024/texmf-dist/doc/info:${INFOPATH}"
-#ENV MANPATH="/usr/local/texlive/2024/texmf-dist/doc/man:${MANPATH}"
+FROM base-env AS final-env
 
-# Install more Latex Packages
-RUN tlmgr install abntex2
-RUN tlmgr install multibib
-RUN tlmgr install steinmetz 
-RUN tlmgr install newtx
+ARG TEXLIVE_VERSION
+ARG TEXLIVE_PLATFORM
 
-RUN rm -r /install-tl-unx
-RUN rm install-tl-unx.tar.gz
+ARG TEXMF_FOLDER
 
-## R
-WORKDIR /R
-RUN apt-get install --quiet --yes --no-install-recommends r-base
-RUN apt-get install --quiet --yes --no-install-recommends libfontconfig1-dev
-RUN apt-get install --quiet --yes --no-install-recommends libxml2-dev
+RUN apt-get update -y -qq && apt-get install -y -qq --no-install-recommends \
+    libfontconfig1-dev \
+    libxml2-dev && \
+    #
+    apt-get -y autoclean && apt-get -y autoremove && apt-get -y clean && \
+    rm -rf /var/lib/apt/lists/*
 
+COPY --from=build-env /usr/local/texlive /usr/local/texlive
+
+ENV PATH="/usr/local/texlive/${TEXLIVE_VERSION}/bin/${TEXLIVE_PLATFORM}:${PATH}"
+ENV INFOPATH="/usr/local/texlive/${TEXLIVE_VERSION}/texmf-dist/doc/info:${INFOPATH}"
+ENV MANPATH="/usr/local/texlive/${TEXLIVE_VERSION}/texmf-dist/doc/man:${MANPATH}"
+
+# R
+WORKDIR /tmp/R
 RUN R -e "Sys.setlocale('LC_ALL', 'pt_BR.UTF-8')"
 COPY install.R .
 RUN R -e "source('install.R', encoding = 'UTF-8');"
 
-WORKDIR .
+# System font configuration
+COPY fonts /usr/local/share/fonts/
+RUN fc-cache -fsv
 
-RUN apt-get --yes autoremove && apt-get --yes clean
-RUN rm -rf /var/lib/apt/lists/*
+COPY texmf/ ${TEXMF_FOLDER}/
+RUN texhash 
 
-ENV HOME=/home/ubuntu
-COPY inputs $HOME/mystyles
-ENV TEXINPUTS=".:$HOME/mystyles//:"
+## unit tests
+# check if the file was generated
+WORKDIR /tmp/test
+RUN latex small2e
+RUN cat small2e.log | grep -q "Output written on small2e.dvi"
+# command file: not found
+# RUN file small2e.dvi | grep -q 'TeX DVI'
 
-COPY texmf $HOME/texmf
-RUN texhash $HOME/texmf
+# cleanup
+RUN rm -rf /tmp
 
-WORKDIR /data
-COPY build.sh .
-COPY cleanup.sh .
+WORKDIR /
 
-VOLUME ["/data/project"]
+# Install more Latex Packages in entrypoint docker
+# or extra lib-dev
+# RUN tlmgr install newtx
+
+# docker build -t texlive-r:debian .
+# docker run --name texlive-r -it --rm -v /$(pwd)/<the-folder-project>:/content -w /content texlive-r:debian /bin/bash
