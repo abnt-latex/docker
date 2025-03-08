@@ -110,9 +110,9 @@ RUN rm -rf /tmp
 
 WORKDIR /
 
-# Install more Latex Packages in entrypoint docker
+# Install more LaTeX Packages in entrypoint docker
 # or extra lib-dev
 # RUN tlmgr install newtx
 
 # docker build -t texlive-r:debian .
-# docker run --name texlive-r -it --rm -v /$(pwd)/<the-folder-project>:/content -w /content texlive-r:debian /bin/bash
+# docker run --name texlive-r -it --rm texlive-r:debian /bin/bash
