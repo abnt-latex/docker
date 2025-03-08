@@ -50,10 +50,10 @@ jobs:
         run: docker run --rm -v ${{ github.workspace }}/examples:/content --workdir /content --entrypoint ./build.sh ${{ env.TAG }}:${{ env.VERSION }}
       - name: Listar arquivos dentro do repositório
         run: |
-          ls -a ${{ github.workspace }}
+          ls -a ${{ github.workspace }}/examples
       - name: Verficar arquivo pdf
         run: |
-          file output/experiments_with_pi.pdf | grep -q ' PDF '
+          file examples/output/experiments_with_pi.pdf | grep -q ' PDF '
       - name: Carregar arquivos estáticos como artefato
         id: deployment
         uses: actions/upload-pages-artifact@v3
