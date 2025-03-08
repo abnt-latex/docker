@@ -53,6 +53,7 @@ jobs:
       - name: Listar arquivos dentro do repositório
         run: |
           ls -a ${{ github.workspace }}/examples
+          ls -a ${{ github.workspace }}/examples/output
       - name: Verficar arquivo pdf
         run: |
           file examples/output/main.pdf | grep -q ' PDF '
