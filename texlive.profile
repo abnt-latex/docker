@@ -8,7 +8,7 @@ collection-latex 1
 
 #collection-publishers 1
 collection-langportuguese 1
-#collection-latexextra 1
+collection-latexextra 1
 #collection-fontsrecommended 1
 
 # sudo apt-get install texlive-publishers texlive-lang-portuguese texlive-latex-extra texlive-fonts-recommended

@@ -1,5 +1,5 @@
 # Package names
-packages <- c("knitr", "rjson", "wordcloud", "RColorBrewer", "kableExtra", "babynames")
+packages <- c()
 
 # Install packages not yet installed
 installed_packages <- packages %in% rownames(installed.packages())
