@@ -62,7 +62,7 @@ RUN cd install-tl-unx && \
     perl install-tl --profile=texlive.profile
 
 # Post-install
-RUN rm -rf /tmp
+RUN rm -rf /tmp/*
 
 FROM base-env AS final-env
 
@@ -106,7 +106,7 @@ RUN cat small2e.log | grep -q "Output written on small2e.dvi"
 # RUN file small2e.dvi | grep -q 'TeX DVI'
 
 # cleanup
-RUN rm -rf /tmp
+RUN rm -rf /tmp/*
 
 WORKDIR /
 

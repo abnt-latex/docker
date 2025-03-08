@@ -4,13 +4,14 @@ on:
   push:
     branches: [ main ]
 
+env:
+  TAG: ghcr.io/abnt-latex/texlive-r
+  VERSION: 1.0.2
+
 jobs:
   build:
     name: Build TeXLive and R
     runs-on: ubuntu-latest
-    env:
-      TAG: ghcr.io/abnt-latex/texlive-r
-      VERSION: 1.0.2
     steps:
       - name: Informações
         run: |
@@ -38,4 +39,37 @@ jobs:
           context: .
           push: true
           tags: ${{ env.TAG }}:${{ env.VERSION }},${{ env.TAG }}:latest
-      
+  test:
+    name: Tests TeXLive and R
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Confira o código do repositório
+        uses: actions/checkout@v4
+      - name: Compilando os arquivos na Docker
+        run: docker run --rm -v ${{ github.workspace }}/examples:/content --workdir /content --entrypoint ./build.sh ${{ env.TAG }}:${{ env.VERSION }}
+      - name: Listar arquivos dentro do repositório
+        run: |
+          ls -a ${{ github.workspace }}
+      - name: Verficar arquivo pdf
+        run: |
+          file output/experiments_with_pi.pdf | grep -q ' PDF '
+      - name: Carregar arquivos estáticos como artefato
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: examples/output/
+  deploy:
+    name: Deploy no Github Pages
+    needs: [build,test]
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy no Github Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
