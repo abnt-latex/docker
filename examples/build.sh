@@ -51,9 +51,17 @@ exec_pdflatex() {
     echo "PDFLATEX"
     echo "==============================================================================="
 
-    cd ${PROJECT_DIR} 
+    if [ -z "${PROJECT_DIR}" ]; then
+        echo ""
+    else
+        cd ${PROJECT_DIR} 
+    fi
     pdflatex $1 ${FILE}
-    cd ..
+    if [ -z "${PROJECT_DIR}" ]; then
+        echo ""
+    else
+        cd ..
+    fi
 }
 
 exec_bibtex() {
@@ -61,9 +69,17 @@ exec_bibtex() {
     echo "BIBTEX"
     echo "==============================================================================="
 
-    cd ${PROJECT_DIR} 
+    if [ -z "${PROJECT_DIR}" ]; then
+        echo ""
+    else
+        cd ${PROJECT_DIR} 
+    fi
     bibtex ${FILE}
-    cd ..
+    if [ -z "${PROJECT_DIR}" ]; then
+        echo ""
+    else
+        cd ..
+    fi
 }
 
 exec_makeindex() {
@@ -71,9 +87,17 @@ exec_makeindex() {
     echo "MAKEINDEX"
     echo "==============================================================================="
 
-    cd ${PROJECT_DIR} 
+    if [ -z "${PROJECT_DIR}" ]; then
+        echo ""
+    else
+        cd ${PROJECT_DIR} 
+    fi
     makeindex ${FILE}.idx
-    cd ..
+    if [ -z "${PROJECT_DIR}" ]; then
+        echo ""
+    else
+        cd ..
+    fi
 }
 
 exec_makeglossaries() {
@@ -81,9 +105,17 @@ exec_makeglossaries() {
     echo "MAKEGLOSSARIES"
     echo "==============================================================================="
 
-    cd ${PROJECT_DIR} 
+    if [ -z "${PROJECT_DIR}" ]; then
+        echo ""
+    else
+        cd ${PROJECT_DIR} 
+    fi
     makeglossaries ${FILE}
-    cd ..
+    if [ -z "${PROJECT_DIR}" ]; then
+        echo ""
+    else
+        cd ..
+    fi
 }
 
 simplify_output() {
@@ -99,20 +131,26 @@ exec_R() {
     echo "R"
     echo "==============================================================================="
 
-    R_FILES_ARRAY=${R_FILES%$'\n'*}
+    # R_FILES_ARRAY=${R_FILES%$'\n'*}
 
-    R_COMMAND="library(knitr);setwd('${PROJECT_DIR}');Sys.setlocale('LC_ALL', 'C.utf8');options(encoding = 'UTF-8');"
+    # R_COMMAND=""
+    # if [ -z "${PROJECT_DIR}" ]; then
+    #     echo ""
+    # else
+    #     R_COMMAND="setwd('${PROJECT_DIR}');"
+    # fi
+    # R_COMMAND="${R_COMMAND}Sys.setlocale('LC_ALL', 'C.utf8');options(encoding = 'UTF-8');"
 
-    for R_FILE in $R_FILES_ARRAY
-    do
-        INPUT=${R_FILE//"${PROJECT_DIR}"/""}
-        TEX_FILE=${R_FILE//".Rtex"/".tex"}
-        OUTPUT=${TEX_FILE//"${PROJECT_DIR}"/""}
+    # for R_FILE in $R_FILES_ARRAY
+    # do
+    #     INPUT=${R_FILE//"${PROJECT_DIR}"/""}
+    #     TEX_FILE=${R_FILE//".Rtex"/".tex"}
+    #     OUTPUT=${TEX_FILE//"${PROJECT_DIR}"/""}
 
-        R_COMMAND+="knit(input = '${INPUT}', output = '${OUTPUT}', encoding = 'UTF-8');"
-    done
+    #     R_COMMAND+="knit(input = '${INPUT}', output = '${OUTPUT}', encoding = 'UTF-8');"
+    # done
 
-    R -e "$R_COMMAND"
+    # R -e "$R_COMMAND"
 }
 
 for FIGURE_SVG in $FIGURES_SVG; do
