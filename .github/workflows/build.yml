@@ -53,12 +53,12 @@ jobs:
           ls -a ${{ github.workspace }}/examples
       - name: Verficar arquivo pdf
         run: |
-          file examples/output/experiments_with_pi.pdf | grep -q ' PDF '
+          file examples/main.pdf | grep -q ' PDF '
       - name: Carregar arquivos estáticos como artefato
         id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
-          path: examples/output/
+          path: examples/main.pdf
   deploy:
     name: Deploy no Github Pages
     needs: [build,test]
