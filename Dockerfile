@@ -81,8 +81,8 @@ RUN apt-get update -y -qq && apt-get install -y -qq --no-install-recommends \
 COPY --from=build-env /usr/local/texlive /usr/local/texlive
 
 ENV PATH="/usr/local/texlive/${TEXLIVE_VERSION}/bin/${TEXLIVE_PLATFORM}:${PATH}"
-ENV INFOPATH="/usr/local/texlive/${TEXLIVE_VERSION}/texmf-dist/doc/info:${INFOPATH}"
-ENV MANPATH="/usr/local/texlive/${TEXLIVE_VERSION}/texmf-dist/doc/man:${MANPATH}"
+#ENV INFOPATH="/usr/local/texlive/${TEXLIVE_VERSION}/texmf-dist/doc/info:${INFOPATH}"
+#ENV MANPATH="/usr/local/texlive/${TEXLIVE_VERSION}/texmf-dist/doc/man:${MANPATH}"
 
 # R
 WORKDIR /tmp/R
