@@ -40,3 +40,8 @@ pdflatex --interaction=nonstopmode ${ MAIN_FILE } | grep ...
 # https://ctan.org/pkg/latexmk
 latexmk -pdf ${ MAIN_FILE }
 ```
+
+### Workflow Github
+
+> [!NOTE]
+> Necessário atualizar o [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) (PAT) do repositório.
