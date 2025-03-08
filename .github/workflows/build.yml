@@ -49,7 +49,7 @@ jobs:
       - name: Compilando os arquivos na Docker
         run: docker run --rm -v ${{ github.workspace }}/examples:/content --workdir /content --entrypoint ./build.sh ${{ env.TAG }}:${{ env.VERSION }}
       - run: mkdir -p output
-      - run: cp main.pdf output/main.pdf
+      - run: cp main.pdf output/
       - name: Listar arquivos dentro do repositório
         run: |
           ls -a ${{ github.workspace }}/examples
