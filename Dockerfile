@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-ARG TEXLIVE_VERSION="2024"
+ARG TEXLIVE_VERSION="2025"
 ARG TEXLIVE_PLATFORM="x86_64-linux"
 
 ARG TEXMF_FOLDER="/usr/local/texlive/${TEXLIVE_VERSION}/texmf-dist/"
