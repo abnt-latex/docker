@@ -73,7 +73,14 @@ ARG TEXMF_FOLDER
 
 RUN apt-get update -y -qq && apt-get install -y -qq --no-install-recommends \
     libfontconfig1-dev \
-    libxml2-dev && \
+    libxml2-dev \
+    wget \
+    perl \
+    gzip \
+    xz-utils \
+    tar \
+    bzip2 \
+    curl && \
     #
     apt-get -y autoclean && apt-get -y autoremove && apt-get -y clean && \
     rm -rf /var/lib/apt/lists/*
@@ -112,7 +119,9 @@ WORKDIR /
 
 # Install more LaTeX Packages in entrypoint docker
 # or extra lib-dev
-# RUN tlmgr install newtx
+
+RUN tlmgr update --self --all
+RUN tlmgr install newtx
 
 # docker build -t texlive-r:debian .
 # docker run --name texlive-r -it --rm texlive-r:debian /bin/bash
